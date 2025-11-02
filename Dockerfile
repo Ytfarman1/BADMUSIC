@@ -1,21 +1,22 @@
 FROM nikolaik/python-nodejs:python3.10-nodejs19
 
-# 🔧 Fix broken Debian repos and add missing GPG keys
+# 🧩 Fix Debian repo and disable problematic IPv6 sources
 RUN set -ex && \
-    echo "deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
-    echo "deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends gnupg ca-certificates ffmpeg aria2 && \
+    sed -i 's|http://deb.debian.org|http://deb.debian.org|g' /etc/apt/sources.list || true && \
+    echo "deb [arch=amd64] http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "deb [arch=amd64] http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb [arch=amd64] http://security.debian.org bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    apt-get -o Acquire::ForceIPv4=true update && \
+    apt-get install -y --no-install-recommends ffmpeg aria2 ca-certificates gnupg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . /app
 
-# 📦 Install Python deps
+# 🔧 Install dependencies safely
 RUN pip3 install --no-cache-dir -U pip setuptools wheel && \
     pip3 install --no-cache-dir -r requirements.txt
 
-# 🚀 Start your bot
+# 🚀 Launch the bot
 CMD ["python3", "-m", "BADMUSIC"]
