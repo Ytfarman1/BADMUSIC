@@ -24,3 +24,4 @@ yt-dlp
 youtube-search
 youtube-search-python
 pyrogram==2.0.106
+aiohttp==3.9.5
