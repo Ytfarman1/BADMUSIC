@@ -10,6 +10,14 @@ CYAN='\033[0;36m'
 PINK='\033[1;35m'
 NC='\033[0m'
 
+# -------- 🧩 NODEJS INSTALLATION --------
+echo -e "${YELLOW}📦 Installing Node.js 18.x (required for PyTgCalls)...${NC}"
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash - > /dev/null 2>&1
+apt-get install -y nodejs > /dev/null 2>&1
+echo -e "${GREEN}✅ Node.js Installed Successfully!${NC}"
+node -v
+npm -v
+
 # -------- 🎵 ASCII BANNER --------
 echo -e "
 ${RED} _    _ _     _____   _____ _____  ______  ___ ______  ___  ____   _ _____ _____ _____  ${NC}
@@ -23,12 +31,3 @@ ${CYAN} \\/  \\/\\_____/\\____/   \\_/  \\___/  \\____/\\_| |_/___/   \\_|  |_/\
 # -------- 🚀 START BOT --------
 echo -e "${YELLOW}🔄 Starting BADMUSIC Bot...${NC}"
 python3 -m BADMUSIC
-
-# -------- ⚠️ AUTO RESTART (optional) --------
-# Uncomment below lines if you want auto-restart on crash
-# while true
-# do
-#     python3 -m BADMUSIC
-#     echo -e "${RED}❌ Bot crashed! Restarting in 5 seconds...${NC}"
-#     sleep 5
-# done
