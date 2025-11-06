@@ -3,7 +3,7 @@ import random
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from pyrogram.errors import ButtonUserPrivacyRestricted  # added
+from pyrogram.errors import ButtonUserPrivacyRestricted
 from youtubesearchpython.__future__ import VideosSearch
 
 import config
@@ -68,6 +68,7 @@ IMAGE = [
 "https://graph.org/file/2e3cf4327b169b981055e.jpg",   
 ]
 
+
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
@@ -128,26 +129,40 @@ async def start_pm(client, message: Message, _):
     else:
         out = private_panel(_)
         try:
+            # Normal send with buttons
             await message.reply_photo(
                 random.choice(IMAGE),
                 caption=_["start_2"].format(message.from_user.mention, app.mention),
                 reply_markup=InlineKeyboardMarkup(out),
             )
         except ButtonUserPrivacyRestricted:
+            # Fallback: remove t.me links (blocked by Telegram privacy)
+            clean_buttons = []
+            for row in out:
+                clean_row = []
+                for btn in row:
+                    if not btn.url or "t.me/" not in btn.url:
+                        clean_row.append(btn)
+                if clean_row:
+                    clean_buttons.append(clean_row)
             await message.reply_photo(
                 random.choice(IMAGE),
                 caption=_["start_2"].format(message.from_user.mention, app.mention),
+                reply_markup=InlineKeyboardMarkup(clean_buttons) if clean_buttons else None,
             )
-        except Exception:
+        except Exception as e:
+            print(f"Start button error: {e}")
             await message.reply_text(
                 _["start_2"].format(message.from_user.mention, app.mention),
                 reply_markup=InlineKeyboardMarkup(out),
             )
+
         if await is_on_off(2):
-            return await app.send_message(
+            await app.send_message(
                 chat_id=config.LOGGER_ID,
                 text=f"❖ {message.from_user.mention} started the bot.\n\n<b>User ID:</b> <code>{message.from_user.id}</code>",
             )
+
 
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
 @LanguageStart
@@ -161,6 +176,7 @@ async def start_gp(client, message: Message, _):
     )
     await message.delete()
     return await add_served_chat(message.chat.id)
+
 
 @app.on_message(filters.new_chat_members, group=-1)
 async def welcome(client, message: Message):
