@@ -6,8 +6,8 @@ from pyrogram.types import Message
 from pyrogram.enums import MessageEntityType
 from youtubesearchpython.__future__ import VideosSearch
 
-from AviaxMusic.utils.database import is_on_off
-from AviaxMusic.utils.formatters import time_to_seconds
+from BADMUSIC.utils.database import is_on_off
+from BADMUSIC.utils.formatters import time_to_seconds
 
 def time_to_seconds(time):
     stringt = str(time)
@@ -382,3 +382,4 @@ class YouTubeAPI:
             downloaded_file = await loop.run_in_executor(None, audio_dl)
             direct = None
         return downloaded_file, direct
+
