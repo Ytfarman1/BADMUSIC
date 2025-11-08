@@ -125,7 +125,7 @@ async def get_thumb(videoid: str) -> str:
 
     # Add "PURVI BOTS" top-right (default font)
     font = ImageFont.truetype("BADMUSIC/assets/font.ttf", 28)  # 
-    text = "BAD MUSIC "
+    text = "YT MUSIC"
     text_size = draw.textsize(text, font=font)
     draw.text((1280 - text_size[0] - 10, 10), text, fill="yellow", font=font)
     # Cleanup and save
