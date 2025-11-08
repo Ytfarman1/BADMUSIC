@@ -6,8 +6,8 @@ from pyrogram.types import Message
 from pyrogram.enums import MessageEntityType
 from youtubesearchpython.__future__ import VideosSearch
 
-from AviaxMusic.utils.database import is_on_off
-from AviaxMusic.utils.formatters import time_to_seconds
+from BADMUSIC.utils.database import is_on_off
+from BADMUSIC.utils.formatters import time_to_seconds
 
 def time_to_seconds(time):
     stringt = str(time)
@@ -161,7 +161,7 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
             
-        return await get_stream_url(link)
+        return await fetch_song(link)
         
     async def audio(self, link: str, videoid: Union[bool, str] = None):
         """
@@ -174,7 +174,7 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
             
-        return await get_stream_url(link)
+        return await fetch_song(link)
 
     async def playlist(self, link, limit, user_id, videoid: Union[bool, str] = None):
         if videoid:
@@ -287,10 +287,10 @@ class YouTubeAPI:
             
         # For simple audio/video downloads, use our API
         if video and not songvideo:
-            downloaded_file = await get_stream_url(link)
+            downloaded_file = await fetch_song(link)
             return downloaded_file, None
         elif not video and not songaudio:
-            downloaded_file = await get_stream_url(link)
+            downloaded_file = await fetch_song(link)
             return downloaded_file, None
         
         # For specific format downloads, fall back to original yt-dlp method
@@ -382,3 +382,4 @@ class YouTubeAPI:
             downloaded_file = await loop.run_in_executor(None, audio_dl)
             direct = None
         return downloaded_file, direct
+
