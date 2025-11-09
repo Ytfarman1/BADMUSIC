@@ -29,8 +29,6 @@ from youtubesearchpython.__future__ import VideosSearch
 from BADMUSIC import app
 from BADMUSIC.utils.database import is_on_off
 from BADMUSIC.utils.formatters import time_to_seconds
-from .Youtube import YouTubeAPI
-
 
 _cached_cookie = None
 _info_cache = {}  
